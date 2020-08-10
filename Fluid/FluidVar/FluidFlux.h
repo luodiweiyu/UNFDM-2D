@@ -1,10 +1,10 @@
 #pragma once
-#include"../../Flux/Flux.h"
+#include"../../FluxBase/FluxBase.h"
 #include"../FluidPara.h"
 namespace FluidFlux
 {
 	class ConsVar;
-	class BaseVar :public Flux//基本变量
+	class BaseVar :public FluxBase//基本变量
 	{
 	public:
 		BaseVar() { var.resize(dim+2); };
@@ -20,7 +20,7 @@ namespace FluidFlux
 		double p() { if (dim == 3) return var[4]; else return var[3]; };
 	};
 
-	class ConsVar:public Flux//守恒变量
+	class ConsVar:public FluxBase//守恒变量
 	{
 	public:
 		ConsVar() { var.resize(dim + 2); };
@@ -29,22 +29,22 @@ namespace FluidFlux
 		//~ConsVar() { delete[]var; };
 		void updateFromBaseVar(BaseVar& bv);
 		void updateFromBaseVar(double rho, double u, double v, double p);
-		ConsVar& operator=(Flux& f);
-		ConsVar& operator+=(const Flux& f);
+		ConsVar& operator=(FluxBase& f);
+		ConsVar& operator+=(const FluxBase& f);
 	};
 	
-	class FlowFlux :public Flux//流动通量
+	class FlowFlux :public FluxBase//流动通量
 	{
 	public:
 		FlowFlux() { var.resize(dim + 2); };
 		FlowFlux(double f1, double f2, double f3, double f4);
 		FlowFlux(const FlowFlux& f);
 		void changeFF(double f1, double f2, double f3, double f4);
-		FlowFlux& operator=(Flux &f);
+		FlowFlux& operator=(FluxBase&f);
 		FlowFlux& operator=(double number);
 		FlowFlux& operator/=(double number);
 		FlowFlux operator*(double number);
-		FlowFlux& operator+=(const Flux& f);
+		FlowFlux& operator+=(const FluxBase& f);
 		FlowFlux operator+(const FlowFlux& f);
 		FlowFlux operator-(const FlowFlux& f);
 		//friend FlowFlux operator*(double number, FlowFlux& f);

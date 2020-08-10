@@ -51,9 +51,6 @@
     <ClInclude Include="Solid mechanics\SolidVar\SolidVar.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Flux\Flux.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Fluid\FluidVar\FluidFlux.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -70,6 +67,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MoveMesh\MoveMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterWave\WaterWave.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FluxBase\FluxBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,13 +119,13 @@
     <ClCompile Include="Fluid\Riemann\Riemann.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Flux\Flux.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Math\math.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MoveMesh\MoveMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FluxBase\FluxBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

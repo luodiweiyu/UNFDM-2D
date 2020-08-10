@@ -64,7 +64,7 @@ void ConsVar::updateFromBaseVar(double rho, double u, double v, double p)
 	var[2] = rho * v;
 	var[3] = 0.5 * rho * (u * u + v * v) + p / (gama - 1);
 }
-ConsVar& ConsVar:: operator=(Flux& f)
+ConsVar& ConsVar:: operator=(FluxBase& f)
 {
 	for (int i = 0; i < dim + 2; i++)
 	{
@@ -72,7 +72,7 @@ ConsVar& ConsVar:: operator=(Flux& f)
 	}
 	return *this;
 }
-ConsVar& ConsVar::operator+=(const Flux& f)
+ConsVar& ConsVar::operator+=(const FluxBase& f)
 {
 	for (int i = 0; i < dim + 2; i++)
 	{
@@ -101,7 +101,7 @@ void FlowFlux::changeFF(double f1, double f2, double f3, double f4)
 	var[3] = f4;
 }
 
-FlowFlux& FlowFlux:: operator=(Flux& f)
+FlowFlux& FlowFlux:: operator=(FluxBase& f)
 {
 	for (int i = 0; i < dim + 2; i++)
 	{
@@ -134,7 +134,7 @@ FlowFlux FlowFlux:: operator*(double number)
 	}
 	return fluxout;
 }
-FlowFlux& FlowFlux:: operator+=(const Flux& f)
+FlowFlux& FlowFlux:: operator+=(const FluxBase& f)
 {
 
 	for (int i = 0; i < dim + 2; i++)

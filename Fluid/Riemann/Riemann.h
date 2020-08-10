@@ -1,5 +1,5 @@
 #pragma once
-#include"../../Flux/Flux.h"
+#include"../../FluxBase/FluxBase.h"
 #include"../FluidVar/FluidFlux.h"
 #include"../../CoordTrans/coordTrans.h"
 using namespace FluidFlux;

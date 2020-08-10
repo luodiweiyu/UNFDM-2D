@@ -1,32 +1,32 @@
-#include"Flux.h"
-Flux::Flux(Flux& f)
+﻿#include"FluxBase.h"
+FluxBase::FluxBase(FluxBase& f)
 {
 	var = f.var;
 }
-Flux Flux:: operator+(const Flux& f)
+FluxBase FluxBase:: operator+(const FluxBase& f)
 {
-	Flux FluxOut;
+	FluxBase FluxOut;
 	for (int i = 0; i < dim + 2; i++)
 	{
 		FluxOut.var[i] = var[i] + f.var[i];
 	}
 	return FluxOut;
 }
-Flux Flux:: operator-(const Flux& f)
+FluxBase FluxBase:: operator-(const FluxBase& f)
 {
-	Flux FluxOut;
+	FluxBase FluxOut;
 	for (int i = 0; i < dim + 2; i++)
 	{
 		FluxOut.var[i] = var[i] - f.var[i];
 	}
 	return FluxOut;
 }
-Flux& Flux:: operator=(const Flux& f)
+FluxBase& FluxBase:: operator=(const FluxBase& f)
 {
 	var = f.var;
 	return *this;
 }
-Flux& Flux:: operator+=(const Flux& f)
+FluxBase& FluxBase:: operator+=(const FluxBase& f)
 {
 	for (int i = 0; i < dim + 2; i++)
 	{
@@ -34,9 +34,9 @@ Flux& Flux:: operator+=(const Flux& f)
 	}
 	return *this;
 }
-Flux operator*(double number, Flux& f)
+FluxBase operator*(double number, FluxBase& f)
 {
-	Flux FluxOut;
+	FluxBase FluxOut;
 	for (int i = 0; i < f.dim + 2; i++)
 	{
 		FluxOut.var[i] = number * f.var[i];
