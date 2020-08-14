@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,7 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Fluid\Boundary\Boundary.h" />
-    <ClInclude Include="Fluid\FluidPara.h" />
+    <ClInclude Include="Fluid\SuperSonic.h" />
     <ClInclude Include="Fluid\FluidVar\FluidFlux.h" />
     <ClInclude Include="Fluid\Riemann\Riemann.h" />
     <ClInclude Include="Fluid\Solver\SolverFluid.h" />
@@ -157,8 +161,14 @@
     <ClInclude Include="Geometry\Poly.h" />
     <ClInclude Include="Math\math.h" />
     <ClInclude Include="Solid mechanics\SolidVar\SolidVar.h" />
+    <ClInclude Include="TestCase\ShallowWater.h" />
+    <ClInclude Include="TestCase\SuperSonicFlow.h" />
     <ClInclude Include="Time\Time.h" />
+    <ClInclude Include="WaterWave\Boundary\Boundary.h" />
+    <ClInclude Include="WaterWave\Riemann\Riemann.h" />
+    <ClInclude Include="WaterWave\Solver\SolverWaterWave.h" />
     <ClInclude Include="WaterWave\WaterWave.h" />
+    <ClInclude Include="WaterWave\WaterWaveVar\WaterWaveVar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoordTrans\coordTrans.cpp" />
@@ -177,7 +187,13 @@
     <ClCompile Include="Math\math.cpp" />
     <ClCompile Include="MoveMesh\MoveMesh.cpp" />
     <ClCompile Include="Solid mechanics\SolidVar\SolidVar.cpp" />
+    <ClCompile Include="TestCase\ShallowWater.cpp" />
+    <ClCompile Include="TestCase\SuperSonicFlow.cpp" />
     <ClCompile Include="Time\Time.cpp" />
+    <ClCompile Include="WaterWave\Boundary\Boundary.cpp" />
+    <ClCompile Include="WaterWave\Riemann\Riemann.cpp" />
+    <ClCompile Include="WaterWave\Solver\SolverWaterWave.cpp" />
+    <ClCompile Include="WaterWave\WaterWaveVar\WaterWaveVar.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

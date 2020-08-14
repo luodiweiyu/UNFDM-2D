@@ -57,9 +57,6 @@
     <ClInclude Include="Fluid\Boundary\Boundary.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Fluid\FluidPara.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Fluid\Solver\SolverFluid.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -69,10 +66,31 @@
     <ClInclude Include="MoveMesh\MoveMesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="WaterWave\WaterWave.h">
+    <ClInclude Include="FluxBase\FluxBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="FluxBase\FluxBase.h">
+    <ClInclude Include="TestCase\SuperSonicFlow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Fluid\SuperSonic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TestCase\ShallowWater.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterWave\Boundary\Boundary.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterWave\Riemann\Riemann.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterWave\Solver\SolverWaterWave.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterWave\WaterWaveVar\WaterWaveVar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterWave\WaterWave.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -126,6 +144,24 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="FluxBase\FluxBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCase\SuperSonicFlow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCase\ShallowWater.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterWave\Boundary\Boundary.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterWave\Riemann\Riemann.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterWave\Solver\SolverWaterWave.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterWave\WaterWaveVar\WaterWaveVar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

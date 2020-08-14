@@ -1,6 +1,8 @@
 #pragma once
+#include"../Geometry/point.h"
 namespace WaterWave
 {
+	const double g = 9.8;//重力加速度
 	const int ThreeNeiborMethod[12][4] = {
 {1,2,0,0},//方法3
 {0,1,2,2},
@@ -17,7 +19,18 @@ namespace WaterWave
 {0,1,2,0},//方法4
 {2,0,1,2},
 {1,2,0,1},
-	};
+	}; 
 
-class 
+	class BaseVar;
+	class ConsVar;
+	class FlowFlux;
+	namespace Boundary {
+		const int notBc = 0;
+		const int inlet = 1;
+		const int outlet = 2;
+		const int wall = 3;
+		class BoundCondition;
+	}
+	class Solver;
+	namespace Riemann {};
 }

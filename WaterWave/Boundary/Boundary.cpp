@@ -1,7 +1,7 @@
-#include"../../Flowfield/flowfield.h"
-#include"../SuperSonic.h"
 #include"Boundary.h"
-namespace SuperSonic
+#include"../../Flowfield/flowfield.h"
+#include"../Boundary/Boundary.h"
+namespace WaterWave
 {
 	namespace Boundary
 	{
@@ -10,7 +10,7 @@ namespace SuperSonic
 			updateBC(pt);
 		}
 
-		void BoundCondition::updateBC(const Point &pt)
+		void BoundCondition::updateBC(const Point& pt)
 		{
 			if (abs(pt.x() - xmin) <= delta)
 				bc = inlet;
@@ -24,5 +24,4 @@ namespace SuperSonic
 				bc = notBc;
 		}
 	}
-
 }

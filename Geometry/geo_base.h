@@ -11,10 +11,10 @@ namespace geo_base
 	class point_base
 	{
 	public:
-		point_base(double x=0,double y=0,double z=0);
-		double x() { return coord[0]; };
-		double y() { return coord[1]; };
-		double z() { return coord[2]; };
+		point_base(double x = 0, double y = 0, double z = 0);
+		double x() const { return coord[0]; };
+		double y() const { return coord[1]; };
+		double z() const { return coord[2]; };
 		void change_x(double x);
 		void change_y(double y);
 		void change_z(double z);
@@ -34,7 +34,7 @@ namespace geo_base
 	protected:
 		point_base pt[2];
 	public:
-		line_base(point_base &pt1,point_base &pt2);
+		line_base(point_base& pt1, point_base& pt2);
 		line_base() {};
 		bool operator ==(const line_base& ln)
 		{
@@ -50,7 +50,7 @@ namespace geo_base
 		vector <line_base> ln;
 	public:
 		poly_base() {};
-		void add_pt(point_base &pt);
+		void add_pt(point_base& pt);
 		void add_ln(line_base& ln);
 	};
 }

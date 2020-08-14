@@ -1,9 +1,8 @@
 #pragma once
 #include"../../FluxBase/FluxBase.h"
-#include"../FluidPara.h"
-namespace FluidFlux
+#include"../SuperSonic.h"
+namespace SuperSonic
 {
-	class ConsVar;
 	class BaseVar :public FluxBase//基本变量
 	{
 	public:
@@ -11,13 +10,13 @@ namespace FluidFlux
 		BaseVar(double rho,double u,double v,double p);
 		//BaseVar(ConsVar& cv);
 		void changeBV(double rho, double u, double v, double p);
-		void updateFromConsVar(ConsVar& cv);
+		void updateFromConsVar(const ConsVar& cv);
 		//~BaseVar() { delete[]var; };
-		double rho() { return var[0]; };
-		double u() { return var[1]; };
-		double v() { return var[2]; };
-		double w() { if (dim == 3) return var[3]; else return 0; };
-		double p() { if (dim == 3) return var[4]; else return var[3]; };
+		double rho()const  { return var[0]; };
+		double u()const { return var[1]; };
+		double v() const { return var[2]; };
+		double w() const { if (dim == 3) return var[3]; else return 0; };
+		double p() const { if (dim == 3) return var[4]; else return var[3]; };
 	};
 
 	class ConsVar:public FluxBase//守恒变量
@@ -27,7 +26,7 @@ namespace FluidFlux
 		ConsVar(double rho, double u, double v, double p);
 		ConsVar(BaseVar &bv);
 		//~ConsVar() { delete[]var; };
-		void updateFromBaseVar(BaseVar& bv);
+		void updateFromBaseVar(const BaseVar& bv);
 		void updateFromBaseVar(double rho, double u, double v, double p);
 		ConsVar& operator=(FluxBase& f);
 		ConsVar& operator+=(const FluxBase& f);
@@ -47,6 +46,7 @@ namespace FluidFlux
 		FlowFlux& operator+=(const FluxBase& f);
 		FlowFlux operator+(const FlowFlux& f);
 		FlowFlux operator-(const FlowFlux& f);
+		FlowFlux operator/(const double dig);
 		//friend FlowFlux operator*(double number, FlowFlux& f);
 	};
 }

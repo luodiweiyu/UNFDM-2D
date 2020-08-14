@@ -1,15 +1,25 @@
-#include"SolverFluid.h"
 #include<iostream>
 #include<fstream>
-namespace SuperSonic
+#include"SolverWaterWave.h"
+#include"../../CoordTrans/coordTrans.h"
+#include"../Riemann/Riemann.h"
+namespace WaterWave
 {
-	void Solver::initFlow()
+	void Solver::init()
 	{
 		int i;
 		for (i = 0; i < size; i++)
 		{
-			bv[i].changeBV(19.28571, 1.82312, 0, 41.3333);
-			cv[i].updateFromBaseVar(bv[i]);
+			if (mh->point(i).x() <= 1)
+			{
+				bv[i].changeBV(10, 5, 0);
+				cv[i].updateFromBaseVar(bv[i]);
+			}
+			else
+			{
+				bv[i].changeBV(10, 0, 0);
+				cv[i].updateFromBaseVar(bv[i]);
+			}
 		}
 	}
 	void Solver::updateBC(Mesh& mh)
@@ -18,7 +28,6 @@ namespace SuperSonic
 		for (i = 0; i < mh.ptNum(); i++)
 			bc[i].updateBC(mh.point(i));
 	}
-
 	void Solver::updateBounVar()
 	{
 		int i, j;
@@ -32,23 +41,22 @@ namespace SuperSonic
 			if (bc[i].bcType() == notBc)
 				continue;
 			else if (bc[i].bcType() == inlet)
-				bv[i].changeBV(19.28571, 1.82312, 0, 41.3333);
+				bv[i].changeBV(10, 0, 0);
 
 			//bv[i].changeBV(5, 4.1749, 0, 4);
 			else
 			{
 				neiborNum = mh->point(i).neibornum();
-				bvTemp.changeBV(0, 0, 0, 0);
+				bvTemp.changeBV(0, 0, 0);
 				num = 0;
 				if (neiborNum == 2)
 				{
 					for (j = 0; j < neiborNum; j++)
 					{
 						id = mh->point(i).getneibor(j).id();
-						bvTemp.changeBV(bvTemp.rho() + bv[id].rho(),
+						bvTemp.changeBV(bvTemp.h() + bv[id].h(),
 							bvTemp.u() + bv[id].u(),
-							bvTemp.v() + bv[id].v(),
-							bvTemp.p() + bv[id].p());
+							bvTemp.v() + bv[id].v());
 						num++;
 					}
 				}
@@ -59,16 +67,14 @@ namespace SuperSonic
 						id = mh->point(i).getneibor(j).id();
 						if (bc[id].bcType() == notBc)
 						{
-							bvTemp.changeBV(bvTemp.rho() + bv[id].rho(),
+							bvTemp.changeBV(bvTemp.h() + bv[id].h(),
 								bvTemp.u() + bv[id].u(),
-								bvTemp.v() + bv[id].v(),
-								bvTemp.p() + bv[id].p());
+								bvTemp.v() + bv[id].v());
 							num++;
 						}
 					}
-
 				}
-				bv[i].changeBV(bvTemp.rho() / num, bvTemp.u() / num, bvTemp.v() / num, bvTemp.p() / num);
+				bv[i].changeBV(bvTemp.h() / num, bvTemp.u() / num, bvTemp.v() / num);
 			}
 		}
 	}
@@ -78,25 +84,24 @@ namespace SuperSonic
 		for (i = 0; i < size; i++)
 			bv[i].updateFromConsVar(cv[i]);
 	}
-
-	FlowFlux SuperSonic::solverFourNeibor(double dt, Point* localPoint_bak, Point* localPoint, BaseVar* localBV, Point* neiborPoint, BaseVar* neiborBV)
+	FlowFlux WaterWave::solverFourNeibor(Point* localPoint, WaterWave::BaseVar* localBV, Point* neiborPoint, WaterWave::BaseVar* neiborBV)
 	{
-		using namespace SuperSonic::Riemann;
-		coordTrans localCT(dt, *localPoint, *localPoint_bak, neiborPoint[0], neiborPoint[2], neiborPoint[1], neiborPoint[3]);
-		FlowFlux F1 = HLLC_Χ(neiborBV[2], *localBV, localCT);
-		FlowFlux F2 = HLLC_Χ(*localBV, neiborBV[0], localCT);
-		FlowFlux G1 = HLLC_Y(neiborBV[3], *localBV, localCT);
-		FlowFlux G2 = HLLC_Y(*localBV, neiborBV[1], localCT);
+		using namespace Riemann;
+		coordTrans localCT(neiborPoint[0], neiborPoint[2], neiborPoint[1], neiborPoint[3]);
+		FlowFlux F1 = Direct_ξ(neiborBV[2], *localBV, localCT);
+		FlowFlux F2 = Direct_ξ(*localBV, neiborBV[0], localCT);
+		FlowFlux G1 = Direct_η(neiborBV[3], *localBV, localCT);
+		FlowFlux G2 = Direct_η(*localBV, neiborBV[1], localCT);
 		FlowFlux localFF = F2 - F1 + G2 - G1;
 		return localFF;
 	}
-	FlowFlux SuperSonic::solverThreeNeibor(double dt, Point* localPoint_bak, Point* localPoint, BaseVar* localBV, Point* neiborPoint, BaseVar* neiborBV)
+	FlowFlux WaterWave::solverThreeNeibor(Point* localPoint, BaseVar* localBV, Point* neiborPoint, BaseVar* neiborBV)
 	{
 		int i, n0, n1, n2, n3;
 		Point neiborPoint_4[4];
 		BaseVar neiborBV_4[4];
 		FlowFlux localFF;
-		localFF = 0;
+		localFF.changeFF(0, 0, 0);
 		for (i = 0; i < 12; i++)
 		{
 			n0 = ThreeNeiborMethod[i][0];
@@ -112,13 +117,14 @@ namespace SuperSonic
 			neiborPoint_4[2] = neiborPoint[n2];
 			neiborPoint_4[3] = neiborPoint[n3];
 			//std::cout << localFF.flux(0) << " " << localFF.flux(1) << " " << localFF.flux(2) << " " << localFF.flux(3) << std::endl;
-			localFF += solverFourNeibor(dt, localPoint_bak, localPoint, localBV, neiborPoint_4, neiborBV_4);
+			localFF =localFF+ solverFourNeibor(localPoint, localBV, neiborPoint_4, neiborBV_4);
 			//std::cout << localFF.flux(0) << " " << localFF.flux(1) << " " << localFF.flux(2) << " " << localFF.flux(3) << std::endl;
 		}
-		localFF /= 12;
+		localFF = localFF / 12;
 		//std::cout << localFF.flux(0) << " " << localFF.flux(1) << " " << localFF.flux(2) << " " << localFF.flux(3) << std::endl;
 		return localFF;
 	}
+
 	void Solver::solverCore()
 	{
 		int i, j, neiborid;
@@ -138,7 +144,7 @@ namespace SuperSonic
 					neiborPoint[j] = mh->point(neiborid);
 					neiborBV[j] = bv[neiborid];
 				}
-				localFF = solverThreeNeibor(time.deltaT(), &mh_bak.point(i), &mh->point(i), &bv[i], neiborPoint, neiborBV);
+				localFF = solverThreeNeibor(&mh->point(i), &bv[i], neiborPoint, neiborBV);
 			}
 			else
 			{
@@ -148,26 +154,27 @@ namespace SuperSonic
 					neiborPoint[j] = mh->point(neiborid);
 					neiborBV[j] = bv[neiborid];
 				}
-				localFF = solverFourNeibor(time.deltaT(), &mh_bak.point(i), &mh->point(i), &bv[i], neiborPoint, neiborBV);
+				localFF = solverFourNeibor(&mh->point(i), &bv[i], neiborPoint, neiborBV);
 			}
-			cv[i] += localFF * (-time.deltaT());
+			cv[i] =cv[i]+ localFF * (-time.deltaT());
 		}
 	}
+
+
 	void Solver::solver()
 	{
 		time.init();
-		initFlow();
+		init();
 		outFlow("mesh.dat");
 		int count = 0;
 		while (time.currentTime() < time.endTime())
 		{
-			mh_bak = *mh;//备份上一时刻的网格值;
-			moveMesh();
-			time.update(*bv, *mh);
+			//time.update(*bv, *mh);
+			time.update(1e-4);
 			solverCore();
 			updateBaseVar();
 			updateBounVar();
-			if (count % 10 == 0)
+			if (count % 1 == 0)
 			{
 				outFlow("data/t=" + std::to_string(time.currentTime()) + ".dat");
 				std::cout << "step = " << count << "  time = " << time.currentTime() << std::endl;
@@ -176,6 +183,7 @@ namespace SuperSonic
 			time.updateTCurrent();
 		}
 	}
+
 
 	void Solver::outFlow(string filename)
 	{
@@ -187,7 +195,7 @@ namespace SuperSonic
 			face_num += mh->poly(i).ln_num();
 
 		ofstream fout(filename);
-		fout << "variables = x,y,rho,u,v,p" << endl;
+		fout << "variables = x,y,h,u,v" << endl;
 		fout << "zone T=\"test\"" << endl;
 		fout << "zonetype = fepolygon" << endl;
 		fout << "nodes = " << mh->ptNum() << endl;
@@ -215,7 +223,7 @@ namespace SuperSonic
 		fout << endl;
 		for (i = 0; i < mh->ptNum(); i++)
 		{
-			fout << bv[i].rho() << "  ";
+			fout << bv[i].h() << "  ";
 			if (i % 20 == 0)
 				fout << endl;
 		}
@@ -230,13 +238,6 @@ namespace SuperSonic
 		for (i = 0; i < mh->ptNum(); i++)
 		{
 			fout << bv[i].v() << "  ";
-			if (i % 20 == 0)
-				fout << endl;
-		}
-		fout << endl;
-		for (i = 0; i < mh->ptNum(); i++)
-		{
-			fout << bv[i].p() << "  ";
 			if (i % 20 == 0)
 				fout << endl;
 		}
@@ -274,44 +275,5 @@ namespace SuperSonic
 		}
 		fout.close();
 	}
-	void Solver::moveMesh()
-	{
-		int i;
-		static double refX1;
-		static double refY1;
-		static double refX2;
-		static double refY2;
-		double refX;
-		double l;
-		if (time.currentTime() == 0)
-		{
-			refX1 = (xmax - xmin) / 2;
-			refY1 = ymin;
-			refX2 = (xmax - xmin) / 2;
-			refY2 = ymax;
-		}
-		for (i = 0; i < size; i++)
-		{
-			if (mh->point(i).x() > xmin && mh->point(i).x() < xmax && mh->point(i).y() > ymin)
-			{
-				refX = refX1 + (refX2 - refX1) * (mh_bak.pt[i].y() - refY1) / (refY2 - refY1);
-				double sideLeftPt = (refY2 - refY1) * xmin - (refX2 - refX1) * ymin + refX2 * refY1 - refX1 * refY2;
-				double sidelocalPt = (refY2 - refY1) * mh_bak.pt[i].x() - (refX2 - refX1) * mh_bak.pt[i].y() + refX2 * refY1 - refX1 * refY2;
-				if (sideLeftPt * sidelocalPt > 0)
-				{
-					l = (mh_bak.pt[i].x() - xmin) / (refX - xmin);
-					refX = refX1 + (refX1 + 0.2 * sin(time.currentTime() * 20) - refX1) * (mh_bak.pt[i].y() - refY1) / (refY2 - refY1);
-					mh->pt[i].change_x(xmin + l * (refX - xmin));
-				}
-				else
-				{
-					l = (xmax - mh_bak.pt[i].x()) / (xmax - refX);
-					refX = refX1 + (refX1 + 0.2 * sin(time.currentTime() * 20) - refX1) * (mh_bak.pt[i].y() - refY1) / (refY2 - refY1);
-					mh->pt[i].change_x(xmax - l * (xmax - refX));
-				}
-			}
-		}
-		refX2 = refX1 + 0.2 * sin(time.currentTime() * 20);
-		//std::cout << refX2 << "  " << refX1 << std::endl;
-	}
+
 }

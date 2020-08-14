@@ -1,6 +1,12 @@
 #include"Riemann.h"
-using namespace Riemann;
-FlowFlux Riemann::HLLC_¦¶(BaseVar& CL, BaseVar& CR, coordTrans& ct)//°ëµã×ó²àÓÒ²à¸ñµã£¬×ø±ê±ä»»²Î¿¼µã
+#include"../SuperSonic.h"
+#include"../FluidVar/FluidFlux.h"
+//namespace SuperSonic
+//{
+//	namespace Riemann
+//	{
+using namespace SuperSonic;
+FlowFlux SuperSonic::Riemann::HLLC_¦¶(BaseVar& CL, BaseVar& CR, coordTrans& ct)//°ëµã×ó²àÓÒ²à¸ñµã£¬×ø±ê±ä»»²Î¿¼µã
 {
 	double ¦Îx = ct.¦Îx();
 	double ¦Îy = ct.¦Îy();
@@ -66,10 +72,10 @@ FlowFlux Riemann::HLLC_¦¶(BaseVar& CL, BaseVar& CR, coordTrans& ct)//°ëµã×ó²àÓÒ²
 		F_HLLC = FMR;
 	else
 		F_HLLC = FR;
-	F_HLLC.changeFF(F_HLLC.flux(0) * D¦Î, F_HLLC.flux(1) * D¦Î, F_HLLC.flux(2) * D¦Î, F_HLLC.flux(3) * D¦Î);
+	F_HLLC = F_HLLC / D¦Î;
 	return F_HLLC;
 }
-FlowFlux Riemann::HLLC_Y(BaseVar& CD, BaseVar& CU, coordTrans& ct)//°ëµã×ó²àÓÒ²à¸ñµã£¬×ø±ê±ä»»²Î¿¼µã
+FlowFlux SuperSonic::Riemann::HLLC_Y(BaseVar& CD, BaseVar& CU, coordTrans& ct)//°ëµã×ó²àÓÒ²à¸ñµã£¬×ø±ê±ä»»²Î¿¼µã
 {
 	double ¦Çx = ct.¦Çx();
 	double ¦Çy = ct.¦Çy();
@@ -136,8 +142,10 @@ FlowFlux Riemann::HLLC_Y(BaseVar& CD, BaseVar& CU, coordTrans& ct)//°ëµã×ó²àÓÒ²à
 	else
 		G_HLLC = GU;
 
-	G_HLLC.changeFF(G_HLLC.flux(0) * D¦Ç, G_HLLC.flux(1) * D¦Ç, G_HLLC.flux(2) * D¦Ç, G_HLLC.flux(3) * D¦Ç);
+	G_HLLC = G_HLLC * D¦Ç;
 
 	return G_HLLC;
 
 }
+//	}
+//}

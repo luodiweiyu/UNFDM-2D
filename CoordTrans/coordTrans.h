@@ -9,9 +9,12 @@ private:
 	double transCof[32];
 	double jacob;
 public:
-	coordTrans() { };
+	coordTrans() { jacob = 0; };
 	coordTrans(double dt,Point tRight, Point tLeft, Point xRight, Point xLeft, Point yRight, Point yLeft, Point zRight = Point(0, 0), Point zLeft = Point(0, 0));
-
+	coordTrans(Point xRight, Point xLeft, Point yRight, Point yLeft, Point zRight = Point(0, 0), Point zLeft = Point(0, 0));
+	void updCofNoTime(Point xRight, Point xLeft, Point yRight, Point yLeft, Point zRight = Point(0, 0), Point zLeft = Point(0, 0));
+	void updCofTime(double dt, Point tRight, Point tLeft);
+	void updJacob();
 	double J() { return jacob; };
 	double x¦Î() { return transCof[0]; };
 	double y¦Î() { return transCof[1]; };

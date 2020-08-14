@@ -2,6 +2,7 @@
 #include"../Geometry/point.h"
 #include"../Geometry/line.h"
 #include"../Geometry/poly.h"
+#include"../Fluid/SuperSonic.h"
 #include<string>
 using std::vector;
 using std::string;
@@ -31,5 +32,5 @@ public:
 	Point point(int i) { return pt[i]; };
 	Line line(int i) { return ln[i]; };
 	Poly poly(int i) { return py[i]; };
-	friend class SolverFluid;
+	friend class SuperSonic::Solver;
 };
