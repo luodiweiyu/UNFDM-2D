@@ -1,4 +1,5 @@
 #include"Riemann.h"
+#include<string>
 namespace WaterWave
 {
 	namespace Riemann
@@ -100,6 +101,36 @@ namespace WaterWave
 				cvu.flux(2) + fu.flux(2) + gu.flux(2));
 			FlowFlux fluxOut = (f¦Îd + f¦Îu) / 2;
 			return fluxOut;
+		}
+		FlowFlux StegerWarmingPlus(BaseVar& BV, coordTrans& ct, std::string axisDirection)
+		{
+			double phix, phiy, phit;
+			if (axisDirection == "xi")
+			{
+				phix = ct.¦Îx();
+				phiy = ct.¦Îy();
+				phit = ct.¦Ît();
+			}
+			else if (axisDirection == "eta")
+			{
+				phix = ct.¦Çx();
+				phiy = ct.¦Çy();
+				phit = ct.¦Çt();
+			}
+			double phic = phit+BV.u() * phix + BV.v() * phiy;
+			double d = sqrt(phix * phix + phiy * phiy);
+			double c = sqrt(g * BV.h());
+			double lamda1 = phic;
+			double lamda2 = phic + c * d;
+			double lamda3 = phic - c * d;
+			lamda1 = (lamda1 + abs(lamda1)) / 2;
+			lamda2 = (lamda2 + abs(lamda2)) / 2;
+			lamda3 = (lamda3 + abs(lamda3)) / 2;
+
+		}
+		FlowFlux StegerWarmingMinus(BaseVar& BV, coordTrans& ct, std::string axisDirection)
+		{
+
 		}
 
 	}

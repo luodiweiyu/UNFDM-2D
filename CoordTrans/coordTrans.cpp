@@ -9,7 +9,7 @@ void coordTrans::updJacob()
 }
 
 void coordTrans::updCofTime(double dt, Point tRight, Point tLeft)
-{	
+{
 	//x而 y而 z而 t而,
 	transCof[12] = (tRight.x() - tLeft.x()) / dt;
 	transCof[13] = (tRight.y() - tLeft.y()) / dt;
@@ -70,12 +70,12 @@ void coordTrans::updCofNoTime(Point xRight, Point xLeft, Point yRight, Point yLe
 	transCof[30] = -(x而() * 汎x() + y而() * 汎y() + z而() * 汎z());
 	transCof[31] = 1;
 }
-coordTrans::coordTrans(double dt,Point tRight, Point tLeft, Point xRight, Point xLeft, Point yRight, Point yLeft, Point zRight, Point zLeft)
+coordTrans::coordTrans(double dt, Point tRight, Point tLeft, Point xRight, Point xLeft, Point yRight, Point yLeft, Point zRight, Point zLeft)
 {
-	updCofNoTime( xRight,  xLeft,  yRight,  yLeft,  zRight,  zLeft);
+	updCofNoTime(xRight, xLeft, yRight, yLeft, zRight, zLeft);
 	updCofTime(dt, tRight, tLeft);
 }
-coordTrans::coordTrans( Point xRight, Point xLeft, Point yRight, Point yLeft, Point zRight, Point zLeft)
+coordTrans::coordTrans(Point xRight, Point xLeft, Point yRight, Point yLeft, Point zRight, Point zLeft)
 {
 	updCofNoTime(xRight, xLeft, yRight, yLeft, zRight, zLeft);
 }

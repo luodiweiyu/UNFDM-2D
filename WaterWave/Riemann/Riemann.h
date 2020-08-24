@@ -11,6 +11,7 @@ namespace WaterWave
 		FlowFlux Direct_Y(BaseVar& CD, BaseVar& CU);
 		FlowFlux Direct_¦Î(BaseVar& CL, BaseVar& CR, coordTrans& ct);
 		FlowFlux Direct_¦Ç(BaseVar& CD, BaseVar& CU, coordTrans& ct);
-
+		FlowFlux StegerWarmingPlus(BaseVar& BV, coordTrans& ct, string axisDirection);
+		FlowFlux StegerWarmingMinus(BaseVar& BV, coordTrans& ct, string axisDirection);
 	}
 }
