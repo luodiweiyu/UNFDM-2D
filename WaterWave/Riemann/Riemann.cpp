@@ -1,6 +1,7 @@
 #include"Riemann.h"
 #include<string>
 #include"../../eigen-3.3.7/Eigen/Dense"
+#include<iostream>
 namespace WaterWave
 {
 	namespace Riemann
@@ -178,10 +179,21 @@ namespace WaterWave
 			LAM(0, 0) = lamda1;
 			LAM(1, 1) = lamda2;
 			LAM(2, 2) = lamda3;
+			//std::cout << L << std::endl;
+			//std::cout << std::endl;
+			//std::cout << R << std::endl;
+			//std::cout << std::endl;
+			//std::cout << LAM << std::endl;
+			//std::cout << std::endl;
+			//std::cout << L * R << std::endl;
+			//std::cout << std::endl;
+			//std::cout << L * LAM * R << std::endl;
+			//std::cout << std::endl;
+
 			Matrix<double,3,1> flux ;
 			flux = L * LAM * R * U;
 			FlowFlux FluxOut;
-			FluxOut.changeFF(flux(0, 0), flux(1, 0), flux(2, 0));
+			FluxOut.changeFF(flux(0, 0)/ct.J(), flux(1, 0) / ct.J(), flux(2, 0) / ct.J());
 			return FluxOut;
 		}
 	}

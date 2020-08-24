@@ -2,7 +2,7 @@
 #include"../WaterWave.h"
 #include"../WaterWaveVar/WaterWaveVar.h"
 #include"../../CoordTrans/coordTrans.h"
-
+#include<string>
 namespace WaterWave
  {
 	namespace Riemann

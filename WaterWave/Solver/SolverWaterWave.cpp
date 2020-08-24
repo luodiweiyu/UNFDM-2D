@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include<fstream>
 #include"SolverWaterWave.h"
 #include"../../CoordTrans/coordTrans.h"
@@ -12,7 +12,7 @@ namespace WaterWave
 		{
 			if (mh->point(i).x() <= 1)
 			{
-				bv[i].changeBV(10, 5, 0);
+				bv[i].changeBV(10, 0, 0);
 				cv[i].updateFromBaseVar(bv[i]);
 			}
 			else
@@ -88,11 +88,21 @@ namespace WaterWave
 	{
 		using namespace Riemann;
 		coordTrans localCT(neiborPoint[0], neiborPoint[2], neiborPoint[1], neiborPoint[3]);
-		FlowFlux F1 = Direct_¦Î(neiborBV[2], *localBV, localCT);
-		FlowFlux F2 = Direct_¦Î(*localBV, neiborBV[0], localCT);
-		FlowFlux G1 = Direct_¦Ç(neiborBV[3], *localBV, localCT);
-		FlowFlux G2 = Direct_¦Ç(*localBV, neiborBV[1], localCT);
-		FlowFlux localFF = F2 - F1 + G2 - G1;
+		//FlowFlux F1 = Direct_Î¾(neiborBV[2], *localBV, localCT);
+		//FlowFlux F2 = Direct_Î¾(*localBV, neiborBV[0], localCT);
+		//FlowFlux G1 = Direct_Î·(neiborBV[3], *localBV, localCT);
+		//FlowFlux G2 = Direct_Î·(*localBV, neiborBV[1], localCT);
+		//FlowFlux localFF = F2 - F1 + G2 - G1;
+
+		FlowFlux fLocalPlus = StegerWarming(*localBV, localCT, "xi", "plus");
+		FlowFlux fLocalMinus = StegerWarming(*localBV, localCT, "xi", "minus");
+		FlowFlux fLeftPlus = StegerWarming(neiborBV[2], localCT, "xi", "plus");
+		FlowFlux fRightMinus = StegerWarming(neiborBV[0], localCT, "xi", "minus");
+		FlowFlux gLocalPlus = StegerWarming(*localBV, localCT, "eta", "plus");
+		FlowFlux gLocalMinus = StegerWarming(*localBV, localCT, "eta", "minus");
+		FlowFlux gDownPlus = StegerWarming(neiborBV[3], localCT, "eta", "plus");
+		FlowFlux gUpMinus = StegerWarming(neiborBV[1], localCT, "eta", "minus");
+		FlowFlux localFF =  (fLocalPlus - fLeftPlus + fRightMinus - fLocalPlus + gLocalPlus - gDownPlus + gUpMinus - gLocalMinus)/**localCT.J()*/;
 		return localFF;
 	}
 	FlowFlux WaterWave::solverThreeNeibor(Point* localPoint, BaseVar* localBV, Point* neiborPoint, BaseVar* neiborBV)
