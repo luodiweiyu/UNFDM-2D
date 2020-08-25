@@ -17,7 +17,7 @@ namespace WaterWave
 			}
 			else
 			{
-				bv[i].changeBV(10, 0, 0);
+				bv[i].changeBV(5, 0, 0);
 				cv[i].updateFromBaseVar(bv[i]);
 			}
 		}
@@ -102,7 +102,7 @@ namespace WaterWave
 		FlowFlux gLocalMinus = StegerWarming(*localBV, localCT, "eta", "minus");
 		FlowFlux gDownPlus = StegerWarming(neiborBV[3], localCT, "eta", "plus");
 		FlowFlux gUpMinus = StegerWarming(neiborBV[1], localCT, "eta", "minus");
-		FlowFlux localFF =  (fLocalPlus - fLeftPlus + fRightMinus - fLocalPlus + gLocalPlus - gDownPlus + gUpMinus - gLocalMinus)/**localCT.J()*/;
+		FlowFlux localFF =  (fLocalPlus - fLeftPlus + fRightMinus - fLocalMinus + gLocalPlus - gDownPlus + gUpMinus - gLocalMinus)/**localCT.J()*/;
 		return localFF;
 	}
 	FlowFlux WaterWave::solverThreeNeibor(Point* localPoint, BaseVar* localBV, Point* neiborPoint, BaseVar* neiborBV)
@@ -154,7 +154,7 @@ namespace WaterWave
 					neiborPoint[j] = mh->point(neiborid);
 					neiborBV[j] = bv[neiborid];
 				}
-				localFF = solverThreeNeibor(&mh->point(i), &bv[i], neiborPoint, neiborBV);
+ 				localFF = solverThreeNeibor(&mh->point(i), &bv[i], neiborPoint, neiborBV);
 			}
 			else
 			{

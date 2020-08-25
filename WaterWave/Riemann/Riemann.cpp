@@ -123,6 +123,7 @@ namespace WaterWave
 				phiy = ct.¦Çy();
 				phit = ct.¦Çt();
 			}
+
 			double u = BV.u();
 			double v = BV.v();
 			double h = BV.h();
@@ -130,6 +131,16 @@ namespace WaterWave
 			U(0, 0) = h;
 			U(1, 0) = h * u;
 			U(2, 0) = h * v;
+
+			//Matrix<double, 3, 1>F;
+			//F(0, 0) = h * u;
+			//F(1, 0) = h * u * u + 0.5 * g * h * h;
+			//F(2, 0) = h * u * v;
+
+			//Matrix<double, 3, 1>G;
+			//G(0, 0) = h * v;
+			//G(1, 0) = h * u * v;
+			//G(2, 0) = h * v * v + 0.5 * g * h * h;
 
 			double phic = phit + u * phix + v * phiy;
 			double d = sqrt(phix * phix + phiy * phiy);
@@ -179,21 +190,73 @@ namespace WaterWave
 			LAM(0, 0) = lamda1;
 			LAM(1, 1) = lamda2;
 			LAM(2, 2) = lamda3;
+			//std::cout << "L = " << std::endl;
 			//std::cout << L << std::endl;
 			//std::cout << std::endl;
+			//std::cout << "R = " << std::endl;
 			//std::cout << R << std::endl;
 			//std::cout << std::endl;
+			//std::cout << "LAM = " << std::endl;
 			//std::cout << LAM << std::endl;
 			//std::cout << std::endl;
+			//std::cout << "L*R = " << std::endl;
 			//std::cout << L * R << std::endl;
 			//std::cout << std::endl;
+			//std::cout << "L * LAM * R = " << std::endl;
 			//std::cout << L * LAM * R << std::endl;
 			//std::cout << std::endl;
 
-			Matrix<double,3,1> flux ;
-			flux = L * LAM * R * U;
+			Matrix<double, 3, 1> flux;
+			flux = (L * LAM * R) * U;
+			//Matrix<double, 3, 1> flux1;
+			//flux1 = (phix * F + phiy * G);
+			//Matrix3d A0, B0;
+			//A0(0, 0) = 0;
+			//A0(0, 1) = 1;
+			//A0(0, 2) = 0;
+			//A0(1, 0) = g * h - u * u;
+			//A0(1, 1) = 2 * u;
+			//A0(1, 2) = 0;
+			//A0(2, 0) = -u * v;
+			//A0(2, 1) = v;
+			//A0(2, 2) = u;
+
+			//B0(0, 0) = 0;
+			//B0(0, 1) = 0;
+			//B0(0, 2) = 1;
+			//B0(1, 0) = -u * v;
+			//B0(1, 1) = v;
+			//B0(1, 2) = u;
+			//B0(2, 0) = g * h - u * v;
+			//B0(2, 1) = 0;
+			//B0(2, 2) = 2 * v;
+
+			//Matrix3d A;
+			//A(0, 0) = phit;
+			//A(0, 1) = phix;
+			//A(0, 2) = phiy;
+			//A(1, 0) = (g * h - u * u) * phix - u * v * phiy;
+			//A(1, 1) = phit + 2 * u * phix + v * phiy;
+			//A(1, 2) = u * phiy;
+			//A(2, 0) = -u * v * phix + (g * h - v * v) * phiy;
+			//A(2, 1) = v * phix;
+			//A(2, 2) = phit + u * phix + 2 * v * phiy;
+
+			//std::cout << flux << std::endl;
+			//std::cout << std::endl;
+			//std::cout << flux1 << std::endl;
+			//std::cout << std::endl;
+			//std::cout << A * U << std::endl;
+			//std::cout << std::endl;
+			//std::cout << L * LAM * R << std::endl;
+			//std::cout << std::endl;
+			//std::cout << A << std::endl;
+			//std::cout << std::endl;
+			//std::cout << (phix*A0+phiy*B0)*U << std::endl;
+			//std::cout << std::endl;
+
 			FlowFlux FluxOut;
-			FluxOut.changeFF(flux(0, 0)/ct.J(), flux(1, 0) / ct.J(), flux(2, 0) / ct.J());
+			FluxOut.changeFF(flux(0, 0) , flux(1, 0) , flux(2, 0) );
 			return FluxOut;
 		}
 	}
