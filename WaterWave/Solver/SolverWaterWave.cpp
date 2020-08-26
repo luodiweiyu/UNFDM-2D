@@ -10,14 +10,14 @@ namespace WaterWave
 		int i;
 		for (i = 0; i < size; i++)
 		{
-			if (mh->point(i).x() <= 1)
+			if ((mh->point(i).x() - 25)* (mh->point(i).x() - 25)+ (mh->point(i).y() - 25)* (mh->point(i).y() - 25) <= 11*11)
 			{
 				bv[i].changeBV(10, 0, 0);
 				cv[i].updateFromBaseVar(bv[i]);
 			}
 			else
 			{
-				bv[i].changeBV(5, 0, 0);
+				bv[i].changeBV(1, 0, 0);
 				cv[i].updateFromBaseVar(bv[i]);
 			}
 		}
@@ -38,12 +38,16 @@ namespace WaterWave
 		using namespace Boundary;
 		for (i = 0; i < size; i++)
 		{
-			if (bc[i].bcType() == notBc)
-				continue;
-			else if (bc[i].bcType() == inlet)
-				bv[i].changeBV(10, 0, 0);
+			//if ((mh->point(i).x() - 25) * (mh->point(i).x() - 25) + (mh->point(i).y() - 25) * (mh->point(i).y() - 25) <= 11)
+			//{
+			//	bv[i].changeBV(10, 0, 0);
+			//	cv[i].updateFromBaseVar(bv[i]);
+			//}
 
-			//bv[i].changeBV(5, 4.1749, 0, 4);
+			/*else*/ if (bc[i].bcType() == notBc)
+				continue;
+			//else if (bc[i].bcType() == inlet)
+			//	bv[i].changeBV(10, 0, 0);
 			else
 			{
 				neiborNum = mh->point(i).neibornum();
@@ -180,7 +184,7 @@ namespace WaterWave
 		while (time.currentTime() < time.endTime())
 		{
 			//time.update(*bv, *mh);
-			time.update(1e-4);
+			time.update(1e-3);
 			solverCore();
 			updateBaseVar();
 			updateBounVar();
