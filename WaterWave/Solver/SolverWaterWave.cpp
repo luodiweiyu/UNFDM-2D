@@ -10,14 +10,14 @@ namespace WaterWave
 		int i;
 		for (i = 0; i < size; i++)
 		{
-			if (mh->point(i).x() <= 1)
+			if ((mh->point(i).x() - 25) * (mh->point(i).x() - 25) + (mh->point(i).y() - 25) * (mh->point(i).y() - 25) <= 11 * 11)
 			{
 				bv[i].changeBV(10, 0, 0);
 				cv[i].updateFromBaseVar(bv[i]);
 			}
 			else
 			{
-				bv[i].changeBV(5, 0, 0);
+				bv[i].changeBV(1, 0, 0);
 				cv[i].updateFromBaseVar(bv[i]);
 			}
 		}
@@ -40,8 +40,8 @@ namespace WaterWave
 		{
 			if (bc[i].bcType() == notBc)
 				continue;
-			else if (bc[i].bcType() == inlet)
-				bv[i].changeBV(10, 0, 0);
+			//else if (bc[i].bcType() == inlet)
+			//	bv[i].changeBV(10, 0, 0);
 
 			//bv[i].changeBV(5, 4.1749, 0, 4);
 			else
@@ -102,7 +102,7 @@ namespace WaterWave
 		FlowFlux gLocalMinus = StegerWarming(*localBV, localCT, "eta", "minus");
 		FlowFlux gDownPlus = StegerWarming(neiborBV[3], localCT, "eta", "plus");
 		FlowFlux gUpMinus = StegerWarming(neiborBV[1], localCT, "eta", "minus");
-		FlowFlux localFF =  (fLocalPlus - fLeftPlus + fRightMinus - fLocalMinus + gLocalPlus - gDownPlus + gUpMinus - gLocalMinus)/**localCT.J()*/;
+		FlowFlux localFF = (fLocalPlus - fLeftPlus + fRightMinus - fLocalMinus + gLocalPlus - gDownPlus + gUpMinus - gLocalMinus)/**localCT.J()*/;
 		return localFF;
 	}
 	FlowFlux WaterWave::solverThreeNeibor(Point* localPoint, BaseVar* localBV, Point* neiborPoint, BaseVar* neiborBV)
@@ -127,7 +127,7 @@ namespace WaterWave
 			neiborPoint_4[2] = neiborPoint[n2];
 			neiborPoint_4[3] = neiborPoint[n3];
 			//std::cout << localFF.flux(0) << " " << localFF.flux(1) << " " << localFF.flux(2) << " " << localFF.flux(3) << std::endl;
-			localFF =localFF+ solverFourNeibor(localPoint, localBV, neiborPoint_4, neiborBV_4);
+			localFF = localFF + solverFourNeibor(localPoint, localBV, neiborPoint_4, neiborBV_4);
 			//std::cout << localFF.flux(0) << " " << localFF.flux(1) << " " << localFF.flux(2) << " " << localFF.flux(3) << std::endl;
 		}
 		localFF = localFF / 12;
@@ -154,7 +154,7 @@ namespace WaterWave
 					neiborPoint[j] = mh->point(neiborid);
 					neiborBV[j] = bv[neiborid];
 				}
- 				localFF = solverThreeNeibor(&mh->point(i), &bv[i], neiborPoint, neiborBV);
+				localFF = solverThreeNeibor(&mh->point(i), &bv[i], neiborPoint, neiborBV);
 			}
 			else
 			{
@@ -166,45 +166,48 @@ namespace WaterWave
 				}
 				localFF = solverFourNeibor(&mh->point(i), &bv[i], neiborPoint, neiborBV);
 			}
-			cv[i] =cv[i]+ localFF * (-time.deltaT());
+			cv[i] = cv[i] + localFF * (-time.deltaT());
 		}
 	}
 
 
 	void Solver::solver()
 	{
-		time.init();
+		time.init(0,0.69,0.6);
 		init();
-		outFlow("mesh.dat");
+		//outFlow("mesh.dat");
 		int count = 0;
 		while (time.currentTime() < time.endTime())
 		{
 			//time.update(*bv, *mh);
-			time.update(1e-4);
+			time.update(*bv, *mh);
 			solverCore();
 			updateBaseVar();
 			updateBounVar();
-			if (count % 1 == 0)
+			if (count % 10 == 0)
 			{
 				outFlow("data/t=" + std::to_string(time.currentTime()) + ".dat");
-				std::cout << "step = " << count << "  time = " << time.currentTime() << std::endl;
+				std::cout << "step = " << count << "  dt = " << time.deltaT() << "  time = " << time.currentTime() << std::endl;
 			}
 			count++;
 			time.updateTCurrent();
 		}
+		outFlow("data/t=" + std::to_string(time.currentTime()) + ".dat");
+		std::cout << "step = " << count << "  dt = " << time.deltaT() << "  time = " << time.currentTime() << std::endl;
 	}
 
 
 	void Solver::outFlow(string filename)
 	{
 		using std::ofstream;
+		using std::ios;
 		using std::endl;
 		int i;
 		int face_num = 0;
 		for (i = 0; i < mh->pyNum(); i++)
 			face_num += mh->poly(i).ln_num();
 
-		ofstream fout(filename);
+		ofstream fout(filename, ios::binary);
 		fout << "variables = x,y,h,u,v" << endl;
 		fout << "zone T=\"test\"" << endl;
 		fout << "zonetype = fepolygon" << endl;

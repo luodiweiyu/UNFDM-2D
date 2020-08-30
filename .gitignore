@@ -11,7 +11,7 @@
 *.sln.docstates
 *.dat
 *.pdf
-data/
+data/*.dat
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -22,7 +22,6 @@ data/
 [Rr]eleases/
 x64/
 x86/
-data/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
