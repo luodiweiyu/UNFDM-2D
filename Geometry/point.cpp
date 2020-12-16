@@ -121,8 +121,8 @@ void Point::position_in_flowfield()
 		point_type = bad;
 	else if (coord[1] < ymin || coord[1] > ymax)
 		point_type = bad;
-	//else if (coord[0] * coord[0] + coord[1] * coord[1] < r * r)
-	//	point_type = bad;
+	else if (coord[0] * coord[0] + coord[1] * coord[1] < r * r)
+		point_type = bad;
 	else
 		point_type = good;
 }
